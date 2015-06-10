@@ -1557,6 +1557,40 @@ class deque : protected deque_base<Allocator>
    }
    #endif
 
+   iterator insert(size_type index, const T& x)
+   {
+       iterator iter = begin() + index;
+       return insert(iter, x);
+   }
+
+   void removeAt(size_type index)
+   {
+       iterator iter = begin() + index;
+       erase(iter);
+   }
+
+   bool contains(const value_type& value)
+   {
+       const_iterator iter = begin();
+       while (iter != end()) {
+           if ((*iter) == value) {
+               return true;
+           }
+           ++iter;
+       }
+       return false;
+   }
+
+   void append(const T& x)
+   {
+       this->push_back(x);
+   }
+
+   void prepend(const T& x)
+   {
+       this->push_front(x);
+   }
+
    //! <b>Effects</b>: Removes the first element from the deque.
    //!
    //! <b>Throws</b>: Nothing.

@@ -1585,6 +1585,23 @@ class vector
    const_reference at(size_type n) const
    { this->priv_check_range(n); return this->m_holder.start()[n]; }
 
+   bool contains(const value_type& value)
+   {
+       const_iterator iter = begin();
+       while (iter != end()) {
+           if ((*iter) == value) {
+               return true;
+           }
+           ++iter;
+       }
+       return false;
+   }
+
+   void append(const T& x)
+   {
+       this->push_back(x);
+   }
+
    //////////////////////////////////////////////
    //
    //                 data access
@@ -1777,6 +1794,44 @@ class vector
    {
       container_detail::insert_n_copies_proxy<Allocator, T*> proxy(x);
       return this->priv_forward_range_insert(vector_iterator_get_ptr(p), n, proxy);
+   }
+
+   iterator insert(size_type index, const T& x)
+   {
+       iterator iter = begin() + index;
+       return insert(iter, x);
+   }
+
+   int indexOf(const T& x) const
+   {
+       const_iterator iter = begin();
+       int idx = 0;
+       while (iter != end()) {
+           if ((*iter) == x) {
+               return idx;
+           }
+           ++idx;
+           ++iter;
+       }
+       return -1;
+   }
+
+   void removeAt(size_type index)
+   {
+       iterator iter = begin() + index;
+       erase(iter);
+   }
+
+   void remove(const T& x)
+   {
+       const_iterator iter = begin();
+       while (iter != end()) {
+           if ((*iter) == x) {
+               erase(iter);
+               break;
+           }
+           ++iter;
+       }
    }
 
    //! <b>Requires</b>: p must be a valid iterator of *this.

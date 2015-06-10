@@ -25,6 +25,9 @@
 #include <boost/container/container_fwd.hpp>
 #include <boost/container/new_allocator.hpp> //new_allocator
 #include <boost/container/throw_exception.hpp>
+
+#include <boost/container/vector.hpp>
+
 // container/detail
 #include <boost/container/detail/flat_tree.hpp>
 #include <boost/container/detail/type_traits.hpp>
@@ -723,6 +726,11 @@ class flat_map
    {  return container_detail::force_copy<std::pair<iterator,bool> >(
          m_flat_tree.insert_unique(container_detail::force<impl_value_type>(x))); }
 
+   std::pair<iterator, bool> insert(const key_type& key, const mapped_type& value)
+   {
+       return insert(value_type(key, value));
+   }
+
    //! <b>Effects</b>: Inserts a new value_type move constructed from the pair if and
    //! only if there is no element in the container with key equivalent to the key of x.
    //!
@@ -967,6 +975,43 @@ class flat_map
    //! <b>Complexity</b>: log(size())+count(k)
    size_type count(const key_type& x) const
       {  return static_cast<size_type>(m_flat_tree.find(x) != m_flat_tree.end());  }
+
+      //! <b>Returns</b>: True if the map contains an entry with key equivalent to x.
+      //!
+      //! <b>Complexity</b>: log(size())+count(k)
+      bool contains(const key_type& x) const
+      {
+          return m_flat_tree.find(x) != m_flat_tree.end();
+      }
+
+      vector<key_type> keys() const
+      {
+          vector<key_type> res;
+          res.reserve(size());
+          const_iterator i = begin();
+          while (i != end()) {
+              res.push_back((*i).first);
+              ++i;
+          }
+          return res;
+      }
+
+      vector<mapped_type> values() const
+      {
+          vector<mapped_type> res;
+          res.reserve(size());
+          const_iterator i = begin();
+          while (i != end()) {
+              res.push_back((*i).second);
+              ++i;
+          }
+          return res;
+      }
+
+      mapped_type& value(const key_type& x)
+      {
+          return at(x);
+      }
 
    //! <b>Returns</b>: An iterator pointing to the first element with key not less
    //!   than k, or a.end() if such an element is not found.
