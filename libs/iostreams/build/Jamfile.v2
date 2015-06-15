@@ -155,6 +155,9 @@ if $(bz2)
     sources += boost_bzip2 bzip2.cpp ;
 }
 
+# Hack fixes android ndk build error with iostreams + zlib (due to link test error?)
+sources += zlib.cpp gzip.cpp ; 
+
 lib boost_iostreams 
     : $(sources) 
     : <link>shared:<define>BOOST_IOSTREAMS_DYN_LINK=1 
